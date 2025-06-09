@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.service.UserService;
+import com.service.UserServiceImpl;
+
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -28,14 +31,26 @@ public class LoginServlet extends HttpServlet {
 
         String un = request.getParameter("username");
         String psw = request.getParameter("password");
-
-        if ("hari".equals(un) && "123".equals(psw)) {
+        
+        UserService service = new UserServiceImpl();
+         
+        if(service.login(un, psw)) {
+        	// send data from servlet to jsp
+        	 request.setAttribute("uname", un);
+             request.getRequestDispatcher("Home.jsp").forward(request, response);
+         } else {
+             request.setAttribute("message", "User not found!");
+             request.getRequestDispatcher("LoginForm.jsp").forward(request, response);
+         } 
+         
+        /* if ("hari".equals(un) && "123".equals(psw)) {
             request.setAttribute("uname", un);
             request.getRequestDispatcher("Home.jsp").forward(request, response);
         } else {
             request.setAttribute("message", "User not found!");
             request.getRequestDispatcher("LoginForm.jsp").forward(request, response);
-        }
+        } */
+        	 
     }
 }
 // send and print signup data to profile.jsp
